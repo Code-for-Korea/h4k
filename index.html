@@ -1,31 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>효도 for Korea</title>
-    <link rel="icon" type="image/png" href="c4k.ico" />
-</head>
-<body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>효도 for Korea (Firebase 연동 버젼)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link href="main.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="c4k.ico">
 
-    <div id="pc" style="text-align: center;">
-        <h1>부모님 PC 손봐드리기</h1>
-        <iframe 
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTl3-o8GRJR_2RJiix9LkQLAshv5z6xPqR3CM-loQn79USl2XsH4Vb-4kDYviKuQkQ3XtwfLcBDLuzL/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"
-            width = "80%" height="300">
-        </iframe>
-    </div>
-    <div id="phone" style="text-align: center;">
-        <h1>부모님 휴대폰 손봐드리기</h1>
-        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTl3-o8GRJR_2RJiix9LkQLAshv5z6xPqR3CM-loQn79USl2XsH4Vb-4kDYviKuQkQ3XtwfLcBDLuzL/pubhtml?gid=1440481050&amp;single=true&amp;widget=true&amp;headers=false"
-            width = "80%" height="300">
-        </iframe>
-    </div>
-    <div id="foot" style="text-align: center;">
-        <a href="https://docs.google.com/spreadsheets/d/1jOmRzZ7WnzKHyQhiwFDzwNkSnMVRzK6wwgg29w_JGPw/edit?usp=sharing" target="new">아이디어 추가하기</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="https://codefor.kr" target="new">Code for Korea &nbsp;&nbsp;&nbsp;<img src="61973616.png" width="30"></a>
-    </div>
 
-</body>
+  </head>
+  <body>
+    <center>
+      <a href="https://codefor.kr/wiki/%ED%9A%A8%EB%8F%84%ED%8F%AC%EC%BD%94%EB%A6%AC%EC%95%84" target="new"><h1>효도 for Korea </h1></a>
+      <h4>부모님 PC가 잘 안될 때 체크 할 사항들</h4>
+      <br><br>
+  </center>
+    <div>
+    <table class="table table-sm table-bordered  table-striped .thead-dark" style="width: 80%; margin: auto;">
+      <thead>
+        <tr>
+          <th scope="col" width="30%">불편해 하시는 점</th>
+          <th scope="col" width="30%">추정 원인</th>
+          <th scope="col">조치 방법</th>
+        </tr>
+      </thead>
+      <tbody id="tbodytag">
+      </tbody>
+    </table>
+  </div>
+  <br><br>
+
+  <div class="container mt-3">
+    나도 한 몫 거들어 보기<input type="text" class="form-control mt-2" id="input_issue" placeholder="추가 할 문제점">
+    <textarea class="form-control mt-2" id="input_cause" placeholder="추정 원인"></textarea>
+    <input type="text" class="form-control mt-2" id="input_solution" placeholder="해결 방법">
+    <button class="btn btn-danger mt-3" id="send">등록하기</button>
+  </div>
+
+  <br><br>
+  <div id="foot" style="text-align: center;">
+   <a href="https://codefor.kr" target="new">Code for Korea<img src="61973616.png" width="30"></a>
+   <br><a href="googledoc_based.html" target="new">Google문서 기반 버젼</a>
+  </div>
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-auth.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-firestore.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-storage.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCneRs8pvcjEPT7HgFYpyTHiMofBzeSAo4",
+    authDomain: "hyodo4korea.firebaseapp.com",
+    projectId: "hyodo4korea",
+    storageBucket: "hyodo4korea.appspot.com",
+    messagingSenderId: "1058729761420",
+    appId: "1:1058729761420:web:ff09c8492f159e84f979a9"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>   
+
+<script>
+  const db = firebase.firestore();
+  db.collection('pc_tips').get().then((snapshot)=>{
+    snapshot.forEach(element => {
+
+      var templateTR = `
+      <tr>
+      <td>${element.data().issue}</td>
+      <td>${element.data().cause}</td>
+      <td>${element.data().solution}</td>
+    </tr> 
+      `;
+      $('#tbodytag').append(templateTR);
+    });
+  })
+
+  $('#send').click(function(){
+      var newobj = {
+          issue : $('#input_issue').val(),
+          cause : $('#input_cause').val(),
+          solution : $('#input_solution').val()
+      }
+      db.collection('pc_tips').add(newobj).then((result)=>{
+          console.log(result);
+          window.location.href="/index.html";
+      }).catch((err)=>{
+          console.log(err);
+      });               
+  })
+</script>
+
+  </body>
 </html>
